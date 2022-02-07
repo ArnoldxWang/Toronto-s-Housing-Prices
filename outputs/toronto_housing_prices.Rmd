@@ -1,0 +1,93 @@
+---
+title: "A Study on Toronto's Housing Prices and Its Effects"
+output: pdf_document
+author: "Jing Li"
+thanks: "Code and data are available at: https://github.com/JINGLI1219/Toronto-s-Housing-Prices.git."
+date: Sat, 05 Feb 2022
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# install.packages("patchwork")
+library(patchwork)
+library(tidyverse)
+```
+
+## Abstract
+
+Affordable housing has an influence on people' health, employment, and access to community facilities in addition to the number of units created or households sheltered. The gains might boost GDP and have far-reaching societal ramifications in Canada. While affordability issues have risen steadily for practically all classes of families over the last two decades, they are disproportionately concentrated among low-income households. This study examines the affordability of housing and social housing for the homeless in Toronto using available data on housing.
+
+## Introduction
+
+Housing is a vehicle for access in the sense that it provides communities with access to a variety of services, and its material objectivity can extend to offer protection and security. Housing may also be a fixed asset that adds to an owner's wealth while also contributing to a country's economic progress. Regardless of its monetary worth, proper housing is a necessary component of well-being, and its absence jeopardises societal cohesiveness and lowers individual quality of life.
+
+The affordability gap, which is now regarded as a housing affordability problem with geographic aspects, is threatening access to suitable housing in specific regions and cities throughout the world. The issue emerges when housing prices surpass wage growth, and because the capacity to buy or live in housing is primarily determined by income, the inability to absorb its cost widens the difference.
+
+According to Toronto Mayor John Tory, "Canada is in the midst of a severe housing crisis. In many places, home costs are out of reach. One out of every five renters spends more than half of their salary on housing, and emergency shelter occupancy rates are approaching 90 percent ""recent" (Tory quoted in Tory and Iveson, 2018). The crisis they highlight has been building for decades, as Toronto's population has grown and a series of past policy decisions have exacerbated the issue of housing affordability.
+
+The starting point for this research study is Toronto, where the disparity between family earnings and housing prices has reached catastrophic levels. This study is inspired by my opinion that there is a divide between housing policy and affordable housing delivery that is paradoxical. The reiteration of crisis designations, as well as several programmes adopted to counteract the inadequate supply of affordable housing, support this notion.
+
+## Data Source
+
+This report utilizes data on reported housing states in Toronto. The reported housing states dataset analyzed in this report was obtained in excel format from the City of Toronto Open Data Portal. The information comes from the Toronto Community Housing Corporation, the City of Toronto's Shelter, Support and Housing Administration, the City of Toronto Affordable Housing Office, and Statistics Canada. Realosophy.com provided the average home price statistics. Users should be aware that the data for each neighbourhood is based on a mathematical aggregation of smaller sub-areas (in this example, Census Tracts) that, when combined, constitute the complete neighbourhood. The overall total may be undercounted because smaller regions' numbers may be rounded or withheld (to comply with Statistics Canada privacy guidelines).
+
+## Methodology and Data Collection
+
+Referring to the data descriptions, variable of social housing waiting list and social housing turnover rates are collected by the Housing Connections, 2011. social housing total units in the city are collected through Toronto Community Housing Corporation. Households assisted information are collected through Residential Rehabilitation Assistance Program (RRAP) and Home Adaptations for Seniors Independence (HASI). Rent bank applicants are collected under the City of Toronto, Shelter, Support and Housing Administration. Lastly, real estate sale prices are collected by Realosophy.com.  
+
+## Data Characteristics
+
+Data are characterized by numerical variable. Social housing waiting list refers to the count of applicants waiting for a social housing placement by their current place of residence, aggregated to neighbourhood level. Housing Connections is an agency that helps people to find and settle into social housing in Toronto. Social housing turnover rates refers to the turnover rates for Housing Connections building addresses, averaged for all SHC addresses within a neighbourhood. Social housing total units in the city are the social housing units including Toronto Community Housing Corporation locations, Housing Connections locations, non-profits and co-op developments participating in the Wait List Housing assistance are the count of housing units (households), consisting of funding commitments under the Residential Rehabilitation Assistance Program (RRAP) and Home Adaptations for Seniors Independence (HASI); and units in housing projects newly occupied under the Affordable Housing Program (AHP), the Home Ownership Assistance Program (HOAP), and the Homelessness Partnership Initiative (HPI). Furthermore, rent bank applicants looks at the number of people who have submitted applications to the rent bank to receive assistance with their rental arrears. The Rent Bank Program provides limited, interest free loans and to seniors, individuals, and families who face eviction for rental arrears. The Rent Bank Program also provides emergency rental deposit loans to people who require first and last months rent to move to more affordable housing. Lastly, real estate sale prices refers to the average price for residential real estate sales during the period 2011-2012, in Canadian dollars. 
+
+## Data Analysis
+
+```{r, include=FALSE}
+data <- read.csv("housing_price.csv")
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=3}
+p1 <- data %>% ggplot(aes(x=Rent.Bank.Applicants, y=Home.Prices)) + geom_point(alpha=0.7, color="thistle")
+
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=3}
+p2 <- data %>% ggplot(aes(x=Mid.Century.Highrise.Population, y=Home.Prices)) + geom_point(alpha=0.7, color="thistle")
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=3}
+p3 <- data %>% ggplot(aes(x=Social.Housing.Units, y=Home.Prices)) + geom_point(alpha=0.7, color="thistle")
+(p1 | p2 | p3)
+```
+By Figure 1, looking at the above plot, it is clear to see that the lower the house price, the less rent bank applicants are. This seems appropriate as with less expensive homes, people have more ability to afford it instead of applying for a loan. Looking at figure 2, we can see that there is indeed a linear relationship with home prices and mid century highrise population. It seems as if the higher the population a community has, the lower the home prices. This however seems contradicting to nature as it is more common to see those places with higher population will have more expensive houses due to the scarcity in resources. Lastly, in figure 3, we can see that the more number of social housing units there are, the lower the prices of houses. 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=4}
+data %>% ggplot(aes(x= Rent.Bank.Applicants  , y=Social.Housing.Units)) + geom_point(alpha=0.7, color="thistle")
+```
+By the above plot, we can see that the more social housing units there are in a community, the less rent bank applicant. This result seems acceptable as it could be due to two factors, either the people would be wealthy enough to buy the houses in that community, or there are enough spaces in the social housing units to accept the ones that could not afford to buy the houses.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.height=4 }
+data %>% ggplot(aes(x= Social.Housing.Waiting.List  , y=Social.Housing.Units)) + geom_point(alpha=0.7, color="thistle")
+```
+Furthermore, we can see that the more social housing housing units there are in a community, the higher number of waitlists. This seems contradicting as in nature, there should be less waiting list for those communities with more social housing units. 
+
+Hence, by looking at the above plots, we can find that there are relationship between housing prices and mid century highrise population, rent bank applicants, number of social housing units. We then see that the more social housing units in a community, there seems to be a decrease in the price houses. Furthermore, we see that the higher the population a community has, the lower the home prices. Both of these observations could suggest that these communities who have both of these traits may have a higher percentage of poverty, as in poverty areas, there tend to be more social housing units, with a lower house price regradless of the population. 
+
+## Reference
+
+Canada Mortgage and Housing Corporation (CMHC). Affordable, Adaptable Housing. (2000). ftp://ftp.cmhc-schl.gc.ca/chic-ccdh/CMHCPublications/62016.pdf
+
+City of Toronto. Wellbeing Toronto - Housing– Demographics – Data catalogue. Social Development, Finance & Administration; 2014, December 17. http://www1.toronto.ca/wps/portal/contentonly? vgnextoid=4482904ade9ea410VgnVCM10000071d60f89RCRD&vgnextchannel=75d6e03bb8d1e310VgnVCM10000071d60f89RCRD.
+
+Conference Board of Canada, Pulla, Dr. Siomonn. Framing Sustainable Options for Housing in Canada’s North. (2012). http://www.conferenceboard.ca/e-library/abstract.aspx?did=5217
+
+R Core Team. 2020. R: A Language and Environment for Statistical Computing. Vienna, Austria: R
+Foundation for Statistical Computing. https://www.R-project.org/. 
+
+Statistics Canada, Government of Canada. Evolution of Housing in Canada, 1957 to 2014 (2015) http://www.statcan.gc.ca/pub/11-630-x/11-630-x2015007-eng.htm
+
+
+Wayland, Sara V. The Housing Needs of Immigrants and Refugees in Canada. A Background Paper for the Canadian Housing & Renewal Association (2007). http://chra.olasoft.com/document/538/FinalReport_CHRAImmigrationHousing_June%2020 071JUG-1292008-2970.pdf
+
+
+ 
